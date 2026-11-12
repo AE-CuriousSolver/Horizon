@@ -1,6 +1,6 @@
 # Horizon: Plan (Run 1b)
 
-Status: **revised plan only**. There is no application code yet. This version follows `SPEC.md` revision 2, the answers in `QUESTIONS.md` and the PR review comments. Where they disagreed, `SPEC.md` won, and section 9 lists those cases. Run 2 starts once this plan is approved.
+Status: **approved and built (Run 2).** This version follows `SPEC.md` revision 2, the answers in `QUESTIONS.md` and the PR review comments. Where they disagreed, `SPEC.md` won, and section 9 lists those cases. Decisions made during the build that this plan didn't settle are in `ASSUMPTIONS.md`.
 
 ---
 
