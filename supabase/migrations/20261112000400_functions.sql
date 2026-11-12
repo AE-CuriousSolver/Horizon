@@ -3,6 +3,7 @@
 
 -- ---------------------------------------------------------------------------
 -- record_note: add task ids to today's note of a kind (one note per kind per local day).
+-- Returns the note id, or null when every task id was already in today's note.
 -- Security invoker: RLS applies as usual.
 -- ---------------------------------------------------------------------------
 create function public.record_note(
@@ -28,9 +29,9 @@ begin
           from unnest(public.system_notes.task_ids || excluded.task_ids) as x
         ),
         details = public.system_notes.details || excluded.details,
-        resolved_at = case
-          when excluded.task_ids <@ public.system_notes.task_ids then public.system_notes.resolved_at
-          else null end
+        resolved_at = null
+    -- Nothing new: leave the note alone (so it isn't flagged as unseen again).
+    where not (excluded.task_ids <@ public.system_notes.task_ids)
   returning id into note_id;
   return note_id;
 end;

@@ -1,6 +1,6 @@
 -- Activity history, lifecycle bookkeeping, notes and the demo seed.
 begin;
-select plan(24);
+select plan(25);
 
 insert into auth.users (id, email) values
   ('aaaaaaaa-0000-0000-0000-000000000001', 'a@example.com'),
@@ -77,6 +77,8 @@ select public.record_note('deleted', array['11111111-0000-0000-0000-000000000001
 select public.record_note('deleted', array['11111111-0000-0000-0000-000000000001', '22222222-0000-0000-0000-000000000002']::uuid[]);
 select is((select count(*)::int from public.system_notes), 1, 'one note per kind per day');
 select is((select cardinality(task_ids) from public.system_notes), 2, 'repeat notes merge their task ids');
+select is(public.record_note('deleted', array['22222222-0000-0000-0000-000000000002']::uuid[]), null,
+  'a note with nothing new is left alone');
 
 -- Demo seed
 set local request.jwt.claims = '{"sub":"dddddddd-0000-0000-0000-00000000000d"}';
