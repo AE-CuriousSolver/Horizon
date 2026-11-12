@@ -25,3 +25,14 @@ export function parsePages(sp: SearchParams): number {
   const n = Number(first(sp.pages));
   return Number.isFinite(n) && n >= 1 ? Math.min(Math.floor(n), 50) : 1;
 }
+
+export function filtersToSearch(f: RadarFilters, viewId?: string | null, extra?: Record<string, string>): string {
+  const p = new URLSearchParams();
+  f.environmentIds.forEach((id) => p.append("env", id));
+  f.stateIds.forEach((id) => p.append("state", id));
+  if (f.overdueOnly) p.set("overdue", "1");
+  if (viewId) p.set("view", viewId);
+  for (const [k, v] of Object.entries(extra ?? {})) p.set(k, v);
+  const s = p.toString();
+  return s ? `?${s}` : "";
+}

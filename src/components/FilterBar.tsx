@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import { saveView } from "@/lib/data/actions";
 import { filters as copy, radar } from "@/lib/copy/en-GB";
 import type { RadarFilters } from "@/lib/board";
+import { filtersToSearch } from "@/lib/searchParams";
 import { cx, inputClass } from "./ui";
 
 interface Item {
@@ -14,16 +15,6 @@ interface Item {
 
 interface ViewItem extends Item {
   filters: RadarFilters;
-}
-
-export function filtersToSearch(f: RadarFilters, viewId?: string | null): string {
-  const p = new URLSearchParams();
-  f.environmentIds.forEach((id) => p.append("env", id));
-  f.stateIds.forEach((id) => p.append("state", id));
-  if (f.overdueOnly) p.set("overdue", "1");
-  if (viewId) p.set("view", viewId);
-  const s = p.toString();
-  return s ? `?${s}` : "";
 }
 
 function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {

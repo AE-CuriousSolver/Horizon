@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { FilterBar, filtersToSearch } from "@/components/FilterBar";
+import { FilterBar } from "@/components/FilterBar";
 import { QuickCapture } from "@/components/QuickCapture";
 import { TaskCard } from "@/components/TaskCard";
 import { EmptyState } from "@/components/ui";
 import { buildRadar, hasFilters } from "@/lib/board";
 import { radar as copy } from "@/lib/copy/en-GB";
 import { getEvents, getLists, getRecentDone, getSession, getSuppressions, getTasks, getViews } from "@/lib/data/load";
-import { first, parseFilters, parsePages, type SearchParams } from "@/lib/searchParams";
+import { filtersToSearch, first, parseFilters, parsePages, type SearchParams } from "@/lib/searchParams";
 
 export default async function RadarPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;
@@ -62,7 +62,7 @@ export default async function RadarPage({ searchParams }: { searchParams: Promis
     },
   }));
   const activeView = viewItems.find((v) => v.id === viewId) ?? null;
-  const moreHref = `/${filtersToSearch(filters, activeView?.id)}${filtersToSearch(filters, activeView?.id) ? "&" : "?"}pages=${pages + 1}`;
+  const moreHref = `/${filtersToSearch(filters, activeView?.id, { pages: String(pages + 1) })}`;
 
   return (
     <div>
