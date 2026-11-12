@@ -174,7 +174,7 @@ Neutral labels would be something like "Now", "Everything" and "Saved views".
 For example, "Nothing needs you right now. Everything else is held safely."
 Or would you rather it stay strictly neutral?
 [Default: a short, calm message with no celebration or confetti.]
-Answer: a short, calm message with no celebration or confetti. With maybe at the bottom, not obvious but a clickable action, something about time on hands? Or feeling motivated? Or Want to look ahead? Then note a few things 1. tasks evaluation, any scoring updates, tasks we deleted, all good? 2. Any events to add? 3. Create views 4. Want to organise some blocks?
+** Answer: a short, calm message with no celebration or confetti. With maybe at the bottom, not obvious but a clickable action, something about time on hands? Or feeling motivated? Or Want to look ahead? Then note a few things 1. tasks evaluation, any scoring updates, tasks we deleted, all good? 2. Any events to add? 3. Create views 4. Want to organise some blocks?
 
 **Q-V4. Is a light/dark theme following the device setting wanted?**
 [Default: yes, following the system setting, with no toggle.]
@@ -192,6 +192,7 @@ I've kept these to what I need for building v1. Each has a default, and Run 2 us
 **Q-R2-2. What should "Not right?" do on an ordering Note?**
 For example, "We moved *Tax return* up". Notes need an undo, but ordering is recalculated every time.
 [Default: "**Put it back**" skips that adjustment for that one task for 7 days. If you'd prefer it simpler, the note can just link to the matching toggle in Settings.]
+** Answer: Let's start with skips that adjustment for that one task for 7 days. 
 
 **Q-R2-3. How does a single-day event with an exact time affect `during` and `after` tasks?**
 For example, "Dinner with John, 7pm".
