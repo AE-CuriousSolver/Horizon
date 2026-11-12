@@ -171,7 +171,7 @@ begin
 
   insert into public.tasks (user_id, title, effort, impact, urgency, environment_id, deadline_at, deadline_precision,
                             created_at, waiting_since)
-  values (uid, 'Return library books', 1, 2, 2, env_errands, (today - interval '1 day') at time zone tz, 'day',
+  values (uid, 'Return library books', 1, 2, 2, env_errands, today at time zone tz, 'day', -- due by end of yesterday
           now() - interval '20 days', now() - interval '20 days');
 
   insert into public.tasks (user_id, title, description, effort, impact, urgency, environment_id, state_id,

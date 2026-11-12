@@ -258,14 +258,18 @@ export const notes = {
   kinds: {
     auto_let_go: (titles: string) =>
       `We didn't hear back after the moment passed, so we let ${titles} go.`,
-    hidden_by_event: (titles: string) => `${titles} went out of view because of an event change.`,
+    hidden_by_event: (titles: string, _n: number, event?: string) =>
+      event
+        ? `${titles} went out of view after ${event} changed. It'll come back when the time is right.`
+        : `${titles} went out of view because of an event change.`,
     deleted: (titles: string) => `You deleted ${titles}.`,
     brought_forward: (titles: string) => `A run of deadlines is coming, so we brought ${titles} forward.`,
     light_run_boost: (titles: string) =>
       `You've cleared lots of small things, so we moved ${titles} up.`,
     heavy_run_boost: (titles: string) => `After some heavy going, we lifted ${titles} for a lighter moment.`,
-    quick_win: (titles: string) => `${titles} had been waiting a while, so we moved it up as a quick win.`,
-  },
+    quick_win: (titles: string, n: number) =>
+      `${titles} had been waiting a while, so we moved ${n === 1 ? "it" : "them"} up as ${n === 1 ? "a quick win" : "quick wins"}.`,
+  } as Record<string, (titles: string, n: number, event?: string) => string>,
   gone: "(no longer here)",
 } as const;
 

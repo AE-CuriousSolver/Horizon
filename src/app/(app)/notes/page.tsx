@@ -6,6 +6,7 @@ import { getNotes, getSession } from "@/lib/data/load";
 import { statusOf, type NoteRow, type TaskRow } from "@/lib/data/rows";
 import { capitalise, formatDay, joinTitles } from "@/lib/format";
 import { ADJUSTMENT_FOR_NOTE, type OrderingNoteKind } from "@/lib/priority/housekeeping";
+import { resolveWhen } from "@/lib/priority/time";
 
 const ORDERING = new Set<NoteRow["kind"]>(["brought_forward", "light_run_boost", "heavy_run_boost", "quick_win"]);
 
@@ -22,7 +23,8 @@ export default async function NotesPage() {
   const notes: NoteModel[] = rows.map((n) => {
     const known = n.task_ids.map((id) => tasks.get(id)).filter((t) => !!t);
     const titles = known.map((t) => t.title);
-    const message = copy.kinds[n.kind](titles.length ? joinTitles(titles) : copy.gone);
+    const eventName = typeof n.details?.event_name === "string" ? n.details.event_name : undefined;
+    const message = copy.kinds[n.kind]!(titles.length ? joinTitles(titles) : copy.gone, titles.length, eventName);
     const items: NoteTask[] = known.map((t) => {
       const status = statusOf(t);
       let action: NoteTask["action"] = null;
@@ -42,7 +44,8 @@ export default async function NotesPage() {
     });
     return {
       id: n.id,
-      when: capitalise(formatDay(new Date(n.updated_at), tz, now)),
+      // The note's own local day (midday avoids any timezone edge).
+      when: capitalise(formatDay(resolveWhen("start", { date: n.local_day, precision: "exact", time: "12:00" }, tz), tz, now)),
       message,
       resolved: !!n.resolved_at,
       tasks: items,

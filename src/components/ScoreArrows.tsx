@@ -14,22 +14,27 @@ export function ScoreStepper({
   value,
   onChange,
   disabled,
+  compact,
 }: {
   label: string;
   hint?: string;
   value: number;
   onChange: (next: number) => void;
   disabled?: boolean;
+  compact?: boolean;
 }) {
-  return (
-    <div className="flex items-center gap-1" title={hint}>
-      <span className="w-14 text-xs text-muted">{label}</span>
+  const btn = cx(
+    compact ? "size-7" : "size-8",
+    "flex items-center justify-center rounded-full text-muted hover:bg-surface-2 disabled:opacity-30",
+  );
+  const controls = (
+    <div className="flex items-center gap-0.5">
       <button
         type="button"
         aria-label={copy.less(label)}
         disabled={disabled || value <= 1}
         onClick={() => onChange(value - 1)}
-        className="flex size-8 items-center justify-center rounded-full text-muted hover:bg-surface-2 disabled:opacity-30"
+        className={btn}
       >
         ▾
       </button>
@@ -41,10 +46,24 @@ export function ScoreStepper({
         aria-label={copy.more(label)}
         disabled={disabled || value >= 5}
         onClick={() => onChange(value + 1)}
-        className="flex size-8 items-center justify-center rounded-full text-muted hover:bg-surface-2 disabled:opacity-30"
+        className={btn}
       >
         ▴
       </button>
+    </div>
+  );
+  if (compact) {
+    return (
+      <div className="flex flex-col items-center" title={hint}>
+        <span className="text-[11px] leading-none text-muted">{label}</span>
+        {controls}
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-center gap-1" title={hint}>
+      <span className="w-14 text-xs text-muted">{label}</span>
+      {controls}
     </div>
   );
 }
@@ -82,7 +101,7 @@ export function ScoreArrows({
   };
 
   return (
-    <div className={cx("flex flex-wrap gap-x-3", pending && "opacity-80", className)}>
+    <div className={cx("flex flex-wrap items-end gap-x-3", pending && "opacity-80", className)}>
       {FIELDS.map((f) => (
         <ScoreStepper
           key={f}
@@ -90,6 +109,7 @@ export function ScoreArrows({
           hint={copy[f].hint}
           value={values[f]}
           onChange={(n) => change(f, n)}
+          compact
         />
       ))}
       {error && <span className="text-xs text-warm">Couldn&apos;t save that. Try again.</span>}

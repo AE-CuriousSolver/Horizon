@@ -1,6 +1,7 @@
 -- Privacy: one user can never read, change, delete or link to another user's rows.
 -- Run with `supabase test db` (CI does this on every pull request).
 begin;
+create extension if not exists pgtap with schema extensions;
 select plan(40);
 
 -- Two ordinary users. The sign-up trigger gives each a profile and their own lists.

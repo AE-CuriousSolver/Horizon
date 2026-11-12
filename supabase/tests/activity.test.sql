@@ -1,5 +1,6 @@
 -- Activity history, lifecycle bookkeeping, notes and the demo seed.
 begin;
+create extension if not exists pgtap with schema extensions;
 select plan(25);
 
 insert into auth.users (id, email) values
