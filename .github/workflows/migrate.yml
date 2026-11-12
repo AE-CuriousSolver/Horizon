@@ -31,6 +31,7 @@ jobs:
         with:
           version: 2.40.7
       - name: Link project
-        run: supabase link --project-ref "$SUPABASE_PROJECT_ID" --password "$SUPABASE_DB_PASSWORD" > /dev/null
+        # The CLI reads SUPABASE_ACCESS_TOKEN and SUPABASE_DB_PASSWORD from the environment.
+        run: supabase link --project-ref "$SUPABASE_PROJECT_ID" > /dev/null
       - name: Push migrations
-        run: supabase db push --password "$SUPABASE_DB_PASSWORD"
+        run: supabase db push
