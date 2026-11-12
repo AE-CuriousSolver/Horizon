@@ -41,8 +41,9 @@ grant execute on function public.record_note(text, uuid[], jsonb) to authenticat
 
 -- ---------------------------------------------------------------------------
 -- reorder_steps: one steps_reordered entry instead of one per row.
+-- p_log = false just tidies positions (e.g. after a step is removed) without logging a reorder.
 -- ---------------------------------------------------------------------------
-create function public.reorder_steps(p_task_id uuid, p_step_ids uuid[]) returns void
+create function public.reorder_steps(p_task_id uuid, p_step_ids uuid[], p_log boolean default true) returns void
 language plpgsql security definer set search_path = '' as $$
 declare
   uid uuid := auth.uid();
@@ -60,12 +61,14 @@ begin
    where s.id = o.step_id and s.task_id = p_task_id and s.user_id = uid;
   perform set_config('horizon.skip_activity', 'off', true);
 
-  perform public.log_activity(uid, p_task_id, 'steps_reordered',
-    jsonb_build_object('title', task_title, 'order', to_jsonb(p_step_ids)));
+  if p_log then
+    perform public.log_activity(uid, p_task_id, 'steps_reordered',
+      jsonb_build_object('title', task_title, 'order', to_jsonb(p_step_ids)));
+  end if;
 end;
 $$;
-revoke all on function public.reorder_steps(uuid, uuid[]) from public, anon;
-grant execute on function public.reorder_steps(uuid, uuid[]) to authenticated;
+revoke all on function public.reorder_steps(uuid, uuid[], boolean) from public, anon;
+grant execute on function public.reorder_steps(uuid, uuid[], boolean) to authenticated;
 
 -- ---------------------------------------------------------------------------
 -- seed_demo_data: wipe and recreate fake data for the calling user, only if
