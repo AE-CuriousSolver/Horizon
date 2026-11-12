@@ -178,3 +178,27 @@ Answer: a short, calm message with no celebration or confetti. With maybe at the
 
 **Q-V4. Is a light/dark theme following the device setting wanted?**
 [Default: yes, following the system setting, with no toggle.]
+
+---
+
+# Round 2 (Run 1b)
+
+I've kept these to what I need for building v1. Each has a default, and Run 2 uses the default unless you say otherwise. Conflicts I've already resolved in favour of `SPEC.md` are listed in `PLAN.md` §9, not here.
+
+**Q-R2-1. When should a "hidden by events" Note be written?**
+§7's example, "*Pack for holiday* was hidden because Holiday has started", clashes with §5. Under §5, a `before` task whose event has started stays visible with a check-in, so it isn't hidden.
+[Default: write it when **one of your own edits** hides a task that was on the Radar. Examples: moving an event later hides its `after` tasks, or linking a task `during` a future event. Event moments passing are handled by check-ins, not this note.]
+
+**Q-R2-2. What should "Not right?" do on an ordering Note?**
+For example, "We moved *Tax return* up". Notes need an undo, but ordering is recalculated every time.
+[Default: "**Put it back**" skips that adjustment for that one task for 7 days. If you'd prefer it simpler, the note can just link to the matching toggle in Settings.]
+
+**Q-R2-3. How does a single-day event with an exact time affect `during` and `after` tasks?**
+For example, "Dinner with John, 7pm".
+[Default: follow the brief literally. A `during` task shows for that whole local day. An `after` task shows from 7pm.]
+
+**Q-R2-4. Should the "Look ahead" page show the v2 Blocks item?**
+[Default: hide it until Blocks exist.]
+
+**Q-R2-5. The demo account is shared by every visitor. Should it reset itself, as well as having the "Reset demo" button?**
+[Default: yes. On "Try the demo", if the data was last reset more than 24 hours ago, it's reset first. Each visitor then usually starts from a tidy state.]
