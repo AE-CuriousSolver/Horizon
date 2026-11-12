@@ -81,10 +81,14 @@ export async function sendMagicLink(_prev: ActionResult | null, formData: FormDa
     const supabase = await createClient();
     // shouldCreateUser: false — there is no public sign-up. Unknown addresses get the
     // same calm reply, so the form doesn't reveal who has an account.
-    await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { shouldCreateUser: false, emailRedirectTo: `${await siteOrigin()}/auth/confirm` },
     });
+    // Couldn't reach Supabase at all: say so, rather than promise a link.
+    if (error && (error.name === "AuthRetryableFetchError" || error.status === 0 || !error.status)) {
+      return fail(errors.network);
+    }
     return { ok: true };
   });
 }
