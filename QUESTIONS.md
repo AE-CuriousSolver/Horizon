@@ -18,6 +18,7 @@ The brief says "magic link only", but visitors can't receive magic-link emails s
 **★ Q-O2. How should demo data be created, given that I never have database credentials and the app never uses the `service_role` key?**
 Proposal: a migration adds a `seed_demo_data()` SQL function that wipes and recreates fake data **for the calling user only**, and only if their profile has `is_demo = true`. You'd set that flag once with a migration that matches the demo email. All dates are relative to `now()`, so the demo never goes stale. It runs on demo sign-in when the account is empty, or from a "Reset demo" button.
 [Default: as proposed. The demo email goes in a migration. Is it OK for that email address to be public in the repo? If not, I'll use a `DEMO_EMAIL` setting that you add as a GitHub secret used by the migration workflow.]
+** Answer: demo email can be public; use a fake address (demo@example.com).
 
 **Q-O3. Should demo visitors be able to change data freely, with a periodic reset?**
 [Default: yes, they can edit freely, plus a "Reset demo data" button. No scheduled job.]
@@ -43,6 +44,7 @@ Should previews be disabled, or is it fine for them to be broken until merge?
 **★ Q-T1. If an overdue task's event window has closed, does it still appear?**
 For example, a task linked `during` "Holiday" with a deadline of Sunday, where the holiday has ended and Sunday has passed. The event rule says hide it, and "the deadline always wins" says show it as overdue.
 [Default: **show it as overdue.** The deadline is the hard limit, and hiding it silently feels like "losing" it.]
+** Answer: A gentle prompt less about the task and more about holiday over. So still display it but then say Holiday has passed, does this need updating? Then if no updated can mark as deleted after set time. Similar for Q2. 
 
 **★ Q-T2. What happens to a `before` task that wasn't done before the event started?**
 By the rules it disappears and is never overdue. That risks something quietly vanishing.
@@ -57,10 +59,12 @@ By the rules it disappears and is never overdue. That risks something quietly va
 **Q-T5. Do events need an "all day" option, or do they always have a start time?**
 For example, "UK holiday" probably doesn't have a meaningful start time.
 [Default: add an `all_day` toggle.]
+** Answer: I never like the wording "all day" when you just mean that day. So Event is on a day, and you can ask if specific time, or between dates (option to set time but hidden by drop down so not overwhelming)
 
 **Q-T6. Should `before` tasks be visible as soon as they're created, even if the event is months away?**
 For example, "Pack for holiday" created in January for an August holiday.
 [Default: yes, as the brief says. Their event pressure stays near zero until the last 7 days, so they sit low in the list. Would you prefer an optional "show from N days before" setting later?]
+** Answer: Yes, as the brief says. Let's calculate the N days based off effort, if high effort maybe 3 weeks before, low effort 7 days. With a 'when will this become visible?" little i pop up where we state the time due to effort, then say sounds a bit off? would you like to set number of days?
 
 **Q-T7. Is the timezone per user and editable in Settings, or always `Australia/Sydney`?**
 [Default: stored per user, defaulting to Sydney, with a simple picker in Settings.]
@@ -78,6 +82,7 @@ In particular:
 
 **Q-S2. What effort values should the three spec examples have?**
 The brief doesn't give effort for toilet paper, tax or zoo. I've assumed E1, E4 and E1.
+**Answers: effort values confirmed: toilet paper 1, tax 4, zoo 1.
 
 **Q-S3. How long is "been sitting a while" for a quick win?**
 [Default: 7 days of being visible and not done, rising to the maximum bump at 21 days. Does the timer reset when a task is edited, or only when it's undone? Default: only on creation or undo. Edits don't reset it.]
@@ -87,6 +92,7 @@ The brief doesn't give effort for toilet paper, tax or zoo. I've assumed E1, E4 
 
 **Q-S5. For deadline clusters, what's a sensible daily workload in effort points?**
 [Default: 6 effort points a day. For example, one E5 and one E1, or three E2s.]
+Answer: The relationship is not linear. I could do 10 low effort tasks in one day but an E5 could take chunks of time over 3 or 4 days. The steps should help understand how much 'stuff' there is to do but we don't ask the user to estimate the amount of time. Effort workload is completely dependant on how much time you have free, A working day vs a Sunday would be different. We don't need a daily effort workload check. 
 
 **Q-S6. Should ordering adjustments and the cap apply before or after filters?**
 For example, should the effort mix consider only the filtered list?
@@ -105,6 +111,7 @@ For example, should the effort mix consider only the filtered list?
 **★ Q-P2. How should the State filter work?**
 Exact match, or graded so that "Low energy" also shows tasks needing less? For example, does filtering on *Focused* also show *Low energy* tasks?
 [Default: exact match, multi-select. States are an editable list with no inherent order, so grading would need extra settings.]
+Answer: exact match for V1. 
 
 **Q-P3. Can filters select several environments at once?**
 For example, "Home or Computer".
@@ -112,9 +119,11 @@ For example, "Home or Computer".
 
 **Q-P4. When the last open step of a task is marked done, should the task complete automatically?**
 [Default: no. It asks gently: "That was the last step. Mark the task done?"]
+Answer: No, and no prompt, they don't need to explain themselves if they're not also marking the task done. It should be a quick process where they follow their cognition not answer out questions. 
 
 **Q-P5. On an overdue task, what does "let it go" do?**
 [Default: mark it done, logged as `let_go` in the activity history so it's distinguishable from real completion. The alternatives are delete, or remove the deadline.]
+Answer: it marks the task as deleted and the activity history is "let go". this is the same as for Tasks where linked Events have passed. I have updated the brief to handle how we can take this action whilst not hiding it from the user. 
 
 **Q-P6. What happens to tasks when you remove an Environment or State that they use?**
 [Default: it's archived, not deleted. Tasks keep the label, and it no longer appears in pickers or filters. Alternatively, prompt to reassign or clear.]
@@ -134,6 +143,7 @@ For example, "Appears when Holiday starts".
 **Q-P10. The default environment "Private": does it mean a place where you have privacy (e.g. a private call), or tasks you don't want shown on screen?**
 If it's the latter, should Private tasks be masked on the Radar?
 [Default: treat it like any other environment, with no masking.]
+Answer: Private is actually more like Privacy. I can't make phone calls at the office but I can make them on my walk. I think it's more about privacy, being on my own. I am thinking of people with house mates, partners, kids and how some stuff can only be done when not around other people. It could be due to sensitive content, it could be due to a surprise, it could be because it's easier.
 
 **Q-P11. Should reasons be one line only, or can a task show two?**
 For example, "Due Wed · Urgent".
@@ -164,6 +174,7 @@ Neutral labels would be something like "Now", "Everything" and "Saved views".
 For example, "Nothing needs you right now. Everything else is held safely."
 Or would you rather it stay strictly neutral?
 [Default: a short, calm message with no celebration or confetti.]
+Answer: a short, calm message with no celebration or confetti. With maybe at the bottom, not obvious but a clickable action, something about time on hands? Or feeling motivated? Or Want to look ahead? Then note a few things 1. tasks evaluation, any scoring updates, tasks we deleted, all good? 2. Any events to add? 3. Create views 4. Want to organise some blocks?
 
 **Q-V4. Is a light/dark theme following the device setting wanted?**
 [Default: yes, following the system setting, with no toggle.]
