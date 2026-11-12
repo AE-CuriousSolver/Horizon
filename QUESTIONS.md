@@ -123,7 +123,7 @@ Answer: No, and no prompt, they don't need to explain themselves if they're not 
 
 **Q-P5. On an overdue task, what does "let it go" do?**
 [Default: mark it done, logged as `let_go` in the activity history so it's distinguishable from real completion. The alternatives are delete, or remove the deadline.]
-Answer: it marks the task as deleted and the activity history is "let go". this is the same as for Tasks where linked Events have passed. I have updated the brief to handle how we can take this action whilst not hiding it from the user. 
+Answer: check the revised brief.  
 
 **Q-P6. What happens to tasks when you remove an Environment or State that they use?**
 [Default: it's archived, not deleted. Tasks keep the label, and it no longer appears in pickers or filters. Alternatively, prompt to reassign or clear.]
