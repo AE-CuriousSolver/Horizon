@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+.DS_Store
+# env files (secrets never committed)
+.env*
+!.env.example
+# supabase local
+supabase/.branches
+supabase/.temp
