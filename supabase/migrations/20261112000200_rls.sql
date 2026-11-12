@@ -1,5 +1,7 @@
 -- Row Level Security on every table: each user can only read and write their own rows.
 -- `anon` gets nothing. Policies use (select auth.uid()) so it's evaluated once per query.
+-- RLS is enabled but not FORCEd: the app never connects as the table owner, and the
+-- few security-definer functions (activity log, demo seed) need to act as the owner.
 
 alter table public.profiles enable row level security;
 alter table public.environments enable row level security;
@@ -12,19 +14,12 @@ alter table public.system_notes enable row level security;
 alter table public.ordering_suppressions enable row level security;
 alter table public.task_activity enable row level security;
 
-alter table public.profiles force row level security;
-alter table public.environments force row level security;
-alter table public.states force row level security;
-alter table public.events force row level security;
-alter table public.tasks force row level security;
-alter table public.steps force row level security;
-alter table public.saved_filters force row level security;
-alter table public.system_notes force row level security;
-alter table public.ordering_suppressions force row level security;
-alter table public.task_activity force row level security;
 
--- Nothing for anonymous visitors.
-revoke all on all tables in schema public from anon;
+-- Nothing for anonymous visitors (RLS would also return nothing, as no policy names anon).
+revoke all on
+  public.profiles, public.environments, public.states, public.events, public.tasks, public.steps,
+  public.saved_filters, public.system_notes, public.ordering_suppressions, public.task_activity
+from anon;
 
 -- Owner-only, full CRUD.
 do $$

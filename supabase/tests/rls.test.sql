@@ -8,11 +8,11 @@ insert into auth.users (id, email) values
   ('aaaaaaaa-0000-0000-0000-000000000001', 'a@example.com'),
   ('bbbbbbbb-0000-0000-0000-000000000002', 'b@example.com');
 
--- Every table in public has RLS enabled and forced.
+-- Every table in public has RLS enabled (a new table without it fails this test).
 select is(
   (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
-    where n.nspname = 'public' and c.relkind = 'r' and not (c.relrowsecurity and c.relforcerowsecurity)),
-  0, 'every public table has RLS enabled and forced');
+    where n.nspname = 'public' and c.relkind = 'r' and not c.relrowsecurity),
+  0, 'every public table has RLS enabled');
 
 -- ---------------------------------------------------------------- user A's data
 set local role authenticated;
